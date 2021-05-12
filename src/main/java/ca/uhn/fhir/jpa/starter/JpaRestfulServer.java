@@ -1,5 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.jpa.starter.interceptors.KeycloakAccessTokenInterceptor;
+import ca.uhn.fhir.jpa.starter.interceptors.PkbAuthorizationInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
@@ -22,7 +24,8 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
     super.initialize();
 
     // Add your own customization here
-
+	registerInterceptor(new KeycloakAccessTokenInterceptor());
+	registerInterceptor(new PkbAuthorizationInterceptor());
   }
 
 }
