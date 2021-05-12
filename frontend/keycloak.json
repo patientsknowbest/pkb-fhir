@@ -1,0 +1,8 @@
+{
+  "realm": "pkb-fhir",
+  "auth-server-url": "http://fakepkb.local/auth/",
+  "ssl-required": "external",
+  "resource": "pkb-fhir",
+  "public-client": true,
+  "confidential-port": 0
+}

@@ -1,0 +1,10 @@
+{
+  "realm": "pkb-fhir",
+  "bearer-only": true,
+  "auth-server-url": "http://fakepkb.local/auth/",
+  "ssl-required": "external",
+  "resource": "pkb-fhir-resource",
+  "verify-token-audience": false,
+  "use-resource-role-mappings": true,
+  "confidential-port": 0
+}

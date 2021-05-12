@@ -6,12 +6,14 @@ import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
 import ca.uhn.fhir.jpa.subscription.submit.config.SubscriptionSubmitterConfig;
+import org.keycloak.adapters.servlet.KeycloakOIDCFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -76,4 +78,14 @@ public class Application extends SpringBootServletInitializer {
     return registrationBean;
 
   }
+
+	@Bean
+	public FilterRegistrationBean<KeycloakOIDCFilter> keycloakFilterRegistration() {
+		FilterRegistrationBean<KeycloakOIDCFilter> registration = new FilterRegistrationBean<>();
+		registration.setFilter(new KeycloakOIDCFilter());
+		registration.addUrlPatterns("/fhir/*");
+		registration.addUrlPatterns("/keycloak/*");
+		registration.setName("Keycloak Filter");
+		return registration;
+	}
 }

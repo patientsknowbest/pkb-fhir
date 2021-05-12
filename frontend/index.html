@@ -1,0 +1,35 @@
+<!doctype HTML>
+<html>
+<head>
+    <script src="http://fakepkb.local/auth/js/keycloak.js"></script>
+    <script>
+        'use strict';
+        async function initKeycloak() {
+            try {
+                const keycloak = new Keycloak();
+                let authenticated = await keycloak.init();
+                if (!authenticated) {
+                    keycloak.login();
+                } else {
+                    // Make some FHIR calls
+                    let metadataResp = await fetch("/fhir/metadata", {
+                        headers:{
+                                "Authorization": "Bearer " + keycloak.token,
+                                "Accept": "application/fhir+json"
+                        },
+                    });
+                    let metadata = await metadataResp.text();
+                    document.getElementById("metadata").innerText = metadata
+                }
+            }
+            catch(err) {
+                console.log(err);
+            }
+        }
+    </script>
+</head>
+<body onload="initKeycloak()">
+<p id="metadata"></p>
+<!-- your page content goes here -->
+</body>
+</html>
