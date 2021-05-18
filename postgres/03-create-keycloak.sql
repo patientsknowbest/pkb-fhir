@@ -16,28 +16,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
---
--- Name: keycloak; Type: DATABASE; Schema: -; Owner: keycloak
---
-
-CREATE DATABASE keycloak WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE = 'en_US.utf8';
-
-
-ALTER DATABASE keycloak OWNER TO keycloak;
-
-\connect keycloak
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -1688,6 +1666,7 @@ fb21d241-3368-4331-8d58-5160a53744ee	t	f	realm-management	0	f	\N	\N	t	\N	f	pkb-f
 5cc44fd3-b17a-49fb-b396-f4d32012c603	t	f	admin-cli	0	t	\N	\N	f	\N	f	pkb-fhir	openid-connect	0	f	f	${client_admin-cli}	f	client-secret	\N	\N	\N	f	f	t	f
 13cb01d4-5629-41b8-a27c-ba6519581c0e	t	t	pkb-fhir	0	t	\N	/	f	http://fakepkb.local	f	pkb-fhir	openid-connect	-1	f	f	\N	f	client-secret	http://fakepkb.local	\N	\N	t	f	t	f
 f18864b2-c169-4a00-acd7-dc790bd2cd6e	t	t	pkb-fhir-resource	0	f	\N	\N	t	http://fakepkb.local/fhir	f	pkb-fhir	openid-connect	-1	f	f	pkb-fhir-resource	f	client-secret	http://localhost/fhir	PKB FHIR API server	\N	t	f	t	f
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	t	t	pkb-fhir-system	0	f	9f09b3f0-a255-4532-b0b6-ea6b5a726968	\N	f	\N	f	pkb-fhir	openid-connect	-1	f	f	\N	t	client-secret	\N	\N	\N	t	f	t	f
 \.
 
 
@@ -1740,6 +1719,26 @@ f18864b2-c169-4a00-acd7-dc790bd2cd6e	false	tls.client.certificate.bound.access.t
 f18864b2-c169-4a00-acd7-dc790bd2cd6e	false	saml.authnstatement
 f18864b2-c169-4a00-acd7-dc790bd2cd6e	false	display.on.consent.screen
 f18864b2-c169-4a00-acd7-dc790bd2cd6e	false	saml.onetimeuse.condition
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	true	backchannel.logout.session.required
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	backchannel.logout.revoke.offline.tokens
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	saml.artifact.binding
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	saml.server.signature
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	saml.server.signature.keyinfo.ext
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	saml.assertion.signature
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	saml.client.signature
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	saml.encrypt
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	saml.authnstatement
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	saml.onetimeuse.condition
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	saml_force_name_id_format
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	saml.multivalued.roles
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	saml.force.post.binding
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	exclude.session.state.from.auth.response
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	oauth2.device.authorization.grant.enabled
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	oidc.ciba.grant.enabled
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	true	use.refresh.tokens
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	tls.client.certificate.bound.access.tokens
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	client_credentials.use_refresh_token
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	false	display.on.consent.screen
 \.
 
 
@@ -1966,6 +1965,14 @@ f18864b2-c169-4a00-acd7-dc790bd2cd6e	a8ca61dd-f593-41b4-95fe-aefa18d440a2	f
 f18864b2-c169-4a00-acd7-dc790bd2cd6e	2005b049-0070-4d70-85dc-7c36f79223f2	f
 f18864b2-c169-4a00-acd7-dc790bd2cd6e	19515007-dd24-461d-aeaa-f8f050b2bf48	f
 f18864b2-c169-4a00-acd7-dc790bd2cd6e	a7695dab-7607-4f28-a76e-d7995b7a8fcd	f
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	dca024ab-f75f-4254-852c-ef9ac1689786	t
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	a8871684-4222-4538-9574-a8dd09ae7d2a	t
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	e44e2e32-86dd-43b5-abdc-8f0aac0b1878	t
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	7a8ced8c-d7c4-490d-b8a9-fb678e937992	t
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	a7695dab-7607-4f28-a76e-d7995b7a8fcd	f
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	19515007-dd24-461d-aeaa-f8f050b2bf48	f
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	2005b049-0070-4d70-85dc-7c36f79223f2	f
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	a8ca61dd-f593-41b4-95fe-aefa18d440a2	f
 \.
 
 
@@ -2683,6 +2690,10 @@ f6b7b9ac-bb63-46c2-96d2-805b1f36c38a	locale	openid-connect	oidc-usermodel-attrib
 4e7c74aa-14e5-434d-9b20-633ab35910c2	Client IP Address	openid-connect	oidc-usersessionmodel-note-mapper	f18864b2-c169-4a00-acd7-dc790bd2cd6e	\N
 74c225e9-6716-46f2-af65-aab928f2e7af	Client ID	openid-connect	oidc-usersessionmodel-note-mapper	f18864b2-c169-4a00-acd7-dc790bd2cd6e	\N
 3362bb26-34e5-42de-861c-40011a820ce6	Client Host	openid-connect	oidc-usersessionmodel-note-mapper	f18864b2-c169-4a00-acd7-dc790bd2cd6e	\N
+1c47c864-6b6f-4fa1-9aad-23ac5b64b2fa	PERSON_ID	openid-connect	oidc-usermodel-attribute-mapper	13cb01d4-5629-41b8-a27c-ba6519581c0e	\N
+044cc973-85c6-4602-af92-df9de29eac12	Client ID	openid-connect	oidc-usersessionmodel-note-mapper	3ddef2a9-f6a2-475f-af73-33d10d6508d5	\N
+f1d255cf-1d41-40f1-a737-4aa220e0c64f	Client Host	openid-connect	oidc-usersessionmodel-note-mapper	3ddef2a9-f6a2-475f-af73-33d10d6508d5	\N
+fd9ba4b1-be91-4fba-9595-132319682254	Client IP Address	openid-connect	oidc-usersessionmodel-note-mapper	3ddef2a9-f6a2-475f-af73-33d10d6508d5	\N
 \.
 
 
@@ -2999,6 +3010,27 @@ f6b7b9ac-bb63-46c2-96d2-805b1f36c38a	String	jsonType.label
 3362bb26-34e5-42de-861c-40011a820ce6	String	jsonType.label
 74c225e9-6716-46f2-af65-aab928f2e7af	true	userinfo.token.claim
 3362bb26-34e5-42de-861c-40011a820ce6	true	userinfo.token.claim
+1c47c864-6b6f-4fa1-9aad-23ac5b64b2fa	true	userinfo.token.claim
+1c47c864-6b6f-4fa1-9aad-23ac5b64b2fa	PERSON_ID	user.attribute
+1c47c864-6b6f-4fa1-9aad-23ac5b64b2fa	true	id.token.claim
+1c47c864-6b6f-4fa1-9aad-23ac5b64b2fa	true	access.token.claim
+1c47c864-6b6f-4fa1-9aad-23ac5b64b2fa	personId	claim.name
+1c47c864-6b6f-4fa1-9aad-23ac5b64b2fa	String	jsonType.label
+044cc973-85c6-4602-af92-df9de29eac12	clientId	user.session.note
+044cc973-85c6-4602-af92-df9de29eac12	true	id.token.claim
+044cc973-85c6-4602-af92-df9de29eac12	true	access.token.claim
+044cc973-85c6-4602-af92-df9de29eac12	clientId	claim.name
+044cc973-85c6-4602-af92-df9de29eac12	String	jsonType.label
+f1d255cf-1d41-40f1-a737-4aa220e0c64f	clientHost	user.session.note
+f1d255cf-1d41-40f1-a737-4aa220e0c64f	true	id.token.claim
+f1d255cf-1d41-40f1-a737-4aa220e0c64f	true	access.token.claim
+f1d255cf-1d41-40f1-a737-4aa220e0c64f	clientHost	claim.name
+f1d255cf-1d41-40f1-a737-4aa220e0c64f	String	jsonType.label
+fd9ba4b1-be91-4fba-9595-132319682254	clientAddress	user.session.note
+fd9ba4b1-be91-4fba-9595-132319682254	true	id.token.claim
+fd9ba4b1-be91-4fba-9595-132319682254	true	access.token.claim
+fd9ba4b1-be91-4fba-9595-132319682254	clientAddress	claim.name
+fd9ba4b1-be91-4fba-9595-132319682254	String	jsonType.label
 \.
 
 
@@ -3161,6 +3193,7 @@ b4a9b818-2099-4d12-bfae-867f5ce288b3	/realms/master/account/*
 2496af99-dc8b-4bad-afea-9c1be3d8c437	/admin/pkb-fhir/console/*
 13cb01d4-5629-41b8-a27c-ba6519581c0e	http://fakepkb.local/*
 f18864b2-c169-4a00-acd7-dc790bd2cd6e	http://localhost/fhir/*
+3ddef2a9-f6a2-475f-af73-33d10d6508d5	/
 \.
 
 
@@ -3297,6 +3330,7 @@ COPY public.scope_policy (scope_id, policy_id) FROM stdin;
 --
 
 COPY public.user_attribute (name, value, user_id, id) FROM stdin;
+PERSON_ID	11502	d1ed8b5d-cfa6-493b-92e1-75f63b61bd4a	4cdfd01d-3cb9-4a59-845c-d0e00ab279cf
 \.
 
 
@@ -3323,6 +3357,7 @@ COPY public.user_consent_client_scope (user_consent_id, scope_id) FROM stdin;
 COPY public.user_entity (id, email, email_constraint, email_verified, enabled, federation_link, first_name, last_name, realm_id, username, created_timestamp, service_account_client_link, not_before) FROM stdin;
 27259e8e-75ac-4c19-9f28-c306cfa1801c	\N	286e1e7c-8b38-4ea2-bea0-032904b7aad1	f	t	\N	\N	\N	master	admin	1620855364657	\N	0
 d1ed8b5d-cfa6-493b-92e1-75f63b61bd4a	\N	181b0870-b0bd-43c6-9d10-07f3786f36d7	f	t	\N	Martin	Ashby	pkb-fhir	martin	1620855477201	\N	0
+7bd5267a-ebc7-4a25-8bf1-f392751cf581	\N	61700b1f-3880-445b-9c4d-dfd5645ce831	f	t	\N	\N	\N	pkb-fhir	service-account-pkb-fhir-system	1621353968684	3ddef2a9-f6a2-475f-af73-33d10d6508d5	0
 \.
 
 
@@ -3382,6 +3417,7 @@ COPY public.user_role_mapping (role_id, user_id) FROM stdin;
 f61fe5ec-00ee-414b-8be3-6acde04f14cf	27259e8e-75ac-4c19-9f28-c306cfa1801c
 3e2e8a9e-9261-45a7-9602-aa6957163810	27259e8e-75ac-4c19-9f28-c306cfa1801c
 70db86dd-42ea-4dbe-a7f9-1752b34f5635	d1ed8b5d-cfa6-493b-92e1-75f63b61bd4a
+70db86dd-42ea-4dbe-a7f9-1752b34f5635	7bd5267a-ebc7-4a25-8bf1-f392751cf581
 \.
 
 

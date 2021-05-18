@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.jpa.rp.r4.PersonResourceProvider;
 import ca.uhn.fhir.jpa.starter.interceptors.PkbConsentService;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
@@ -38,8 +39,8 @@ public class Application extends SpringBootServletInitializer {
 	AutowireCapableBeanFactory beanFactory;
 	
 	@Bean
-	public PkbConsentService pkbConsentService() {
-		return new PkbConsentService();
+	public PkbConsentService pkbConsentService(PersonResourceProvider personResourceProvider) {
+		return new PkbConsentService(personResourceProvider);
 	}
 	
 	@Bean

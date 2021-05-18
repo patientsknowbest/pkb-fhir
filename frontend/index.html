@@ -4,34 +4,74 @@
     <script src="http://fakepkb.local/auth/js/keycloak.js"></script>
     <script>
         'use strict';
+        const keycloak = new Keycloak();
         async function initKeycloak() {
             try {
-                const keycloak = new Keycloak();
                 let authenticated = await keycloak.init();
                 if (!authenticated) {
                     keycloak.login();
                 } else {
                     document.getElementById("logout").href = keycloak.createLogoutUrl({redirectUri: ""});
                     // Make some FHIR calls
-                    let metadataResp = await fetch("/fhir/metadata", {
+                    let [metadata, patient59, patient6102] = await Promise.allSettled([
+                        fetch("/fhir/metadata", {
                         headers:{
-                                "Authorization": "Bearer " + keycloak.token,
-                                "Accept": "application/fhir+json"
+                            "Accept": "application/fhir+json"
                         },
-                    });
-                    let metadata = await metadataResp.text();
-                    document.getElementById("metadata").innerText = metadata
+                    }).then(resp => resp.json()), 
+                        fetch("/fhir/Patient/59", {
+                        headers:{
+                            "Authorization": "Bearer " + keycloak.token,
+                            "Accept": "application/fhir+json"
+                        },
+                    }).then(resp => resp.json()), 
+                        fetch("/fhir/Patient/6102", {
+                        headers:{
+                            "Authorization": "Bearer " + keycloak.token,
+                            "Accept": "application/fhir+json"
+                        },
+                    }).then(resp => resp.json())
+                    ]);
+                    
+                    document.getElementById("metadata").innerHTML = proc(metadata.value);
+                    document.getElementById("patient59").innerHTML = proc(patient59.value);
+                    document.getElementById("patient6102").innerHTML = proc(patient6102.value);
                 }
             }
             catch(err) {
                 console.log(err);
             }
         }
+        
+        function proc(value) {
+            if (value.resourceType === "OperationOutcome") {
+                return value.text.div;
+            } else {
+                return JSON.stringify(value);
+            }
+        }
     </script>
+    <style>
+        .column {
+            float: left;
+            width: 33.33%;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
 </head>
 <body onload="initKeycloak()">
 <a href="#" id="logout">Logout</a>
-<p id="metadata"></p>
+<div class="row">
+    <div class="column"><p id="metadata"></p></div>
+    <div class="column"><p id="patient59"></p></div>
+    <div class="column"><p id="patient6102"></p></div>
+</div>
 <!-- your page content goes here -->
 </body>
 </html>
