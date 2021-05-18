@@ -7,12 +7,10 @@ import ca.uhn.fhir.jpa.interceptor.validation.IRepositoryValidatingRule;
 import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingInterceptor;
 import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingRuleBuilder;
 import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
-import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import ca.uhn.fhir.rest.param.TokenParam;
 import org.hl7.fhir.r4.model.StructureDefinition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
@@ -28,7 +26,6 @@ import java.util.stream.Collectors;
  */
 @ConditionalOnProperty(prefix = "hapi.fhir", name = "enable_repository_validating_interceptor", havingValue = "true")
 @Configuration
-@Conditional(OnR4Condition.class)
 public class RepositoryValidationInterceptorFactoryR4 implements IRepositoryValidationInterceptorFactory {
 
 	private final FhirContext fhirContext;
