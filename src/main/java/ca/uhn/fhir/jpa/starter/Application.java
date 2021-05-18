@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.jpa.starter.interceptors.PkbConsentService;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
@@ -35,12 +36,22 @@ public class Application extends SpringBootServletInitializer {
 
 	@Autowired
 	AutowireCapableBeanFactory beanFactory;
+	
+	@Bean
+	public PkbConsentService pkbConsentService() {
+		return new PkbConsentService();
+	}
+	
+	@Bean
+	public JpaRestfulServer jpaRestfulServer(PkbConsentService pkbConsentService) {
+		JpaRestfulServer jpaRestfulServer = new JpaRestfulServer(pkbConsentService);
+		beanFactory.autowireBean(jpaRestfulServer);
+		return jpaRestfulServer;
+	} 
 
 	@Bean
-	public ServletRegistrationBean<JpaRestfulServer> hapiServletRegistration() {
+	public ServletRegistrationBean<JpaRestfulServer> hapiServletRegistration(JpaRestfulServer jpaRestfulServer) {
 		ServletRegistrationBean<JpaRestfulServer> servletRegistrationBean = new ServletRegistrationBean<>();
-		JpaRestfulServer jpaRestfulServer = new JpaRestfulServer();
-		beanFactory.autowireBean(jpaRestfulServer);
 		servletRegistrationBean.setServlet(jpaRestfulServer);
 		servletRegistrationBean.addUrlMappings("/fhir/*");
 		servletRegistrationBean.setLoadOnStartup(1);
@@ -53,6 +64,7 @@ public class Application extends SpringBootServletInitializer {
 		registration.setFilter(new KeycloakOIDCFilter());
 		registration.addUrlPatterns("/fhir/*");
 		registration.addUrlPatterns("/keycloak/*");
+		registration.addInitParameter("keycloak.config.skipPattern", "/fhir/metadata");
 		registration.setName("Keycloak Filter");
 		return registration;
 	}
