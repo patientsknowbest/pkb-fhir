@@ -11,6 +11,7 @@
                 if (!authenticated) {
                     keycloak.login();
                 } else {
+                    document.getElementById("logout").href = keycloak.createLogoutUrl({redirectUri: ""});
                     // Make some FHIR calls
                     let metadataResp = await fetch("/fhir/metadata", {
                         headers:{
@@ -29,6 +30,7 @@
     </script>
 </head>
 <body onload="initKeycloak()">
+<a href="#" id="logout">Logout</a>
 <p id="metadata"></p>
 <!-- your page content goes here -->
 </body>
