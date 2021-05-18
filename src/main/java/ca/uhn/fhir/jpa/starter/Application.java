@@ -6,8 +6,15 @@ import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
 import ca.uhn.fhir.jpa.subscription.submit.config.SubscriptionSubmitterConfig;
+import com.osohq.oso.Oso;
+import org.apache.commons.io.IOUtils;
+import org.hl7.fhir.r4.model.DomainResource;
+import org.hl7.fhir.r4.model.IdType;
+import org.hl7.fhir.r4.model.Immunization;
+import org.hl7.fhir.r4.model.Person;
 import org.keycloak.adapters.servlet.KeycloakOIDCFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,6 +26,10 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.Resource;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @ServletComponentScan(basePackageClasses = {JpaRestfulServer.class})
 @SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class})
@@ -37,10 +48,22 @@ public class Application extends SpringBootServletInitializer {
 
 	@Autowired
 	AutowireCapableBeanFactory beanFactory;
+
+	@Bean
+	public Oso setupOso(@Value("classpath:authorization.polar") Resource resource) throws IOException {
+		Oso oso = new Oso();
+		oso.registerClass(Person.class, "Person");
+		oso.registerClass(DomainResource.class, "DomainResource");
+		oso.registerClass(org.hl7.fhir.r4.model.Resource.class, "Resource");
+		oso.registerClass(IdType.class, "IdType");
+		oso.registerClass(Immunization.class, "Immunization");
+		oso.loadStr(IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8), resource.getFilename());
+		return oso;
+	}
 	
 	@Bean
-	public PkbConsentService pkbConsentService(PersonResourceProvider personResourceProvider) {
-		return new PkbConsentService(personResourceProvider);
+	public PkbConsentService pkbConsentService(PersonResourceProvider personResourceProvider, Oso oso) {
+		return new PkbConsentService(personResourceProvider, oso);
 	}
 	
 	@Bean

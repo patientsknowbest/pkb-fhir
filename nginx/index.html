@@ -19,13 +19,13 @@
                             "Accept": "application/fhir+json"
                         },
                     }).then(resp => resp.json()), 
-                        fetch("/fhir/Patient/59", {
+                        fetch("/fhir/Immunization?patient=Patient/59", {
                         headers:{
                             "Authorization": "Bearer " + keycloak.token,
                             "Accept": "application/fhir+json"
                         },
                     }).then(resp => resp.json()), 
-                        fetch("/fhir/Patient/6102", {
+                        fetch("/fhir/Immunization?patient=Patient/6102", {
                         headers:{
                             "Authorization": "Bearer " + keycloak.token,
                             "Accept": "application/fhir+json"

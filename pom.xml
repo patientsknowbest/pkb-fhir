@@ -20,6 +20,7 @@
         <keycloak.version>13.0.0</keycloak.version>
         <maven.flatten.plugin.version>1.2.2</maven.flatten.plugin.version>
         <javax.mail.version>1.6.2</javax.mail.version>
+        <oso.version>0.9.0</oso.version>
     </properties>
 
     <prerequisites>
@@ -31,6 +32,11 @@
     <name>PKB's HAPI FHIR JPA Server</name>
 
     <dependencies>
+        <dependency>
+            <groupId>com.osohq</groupId>
+            <artifactId>oso</artifactId>
+            <version>${oso.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

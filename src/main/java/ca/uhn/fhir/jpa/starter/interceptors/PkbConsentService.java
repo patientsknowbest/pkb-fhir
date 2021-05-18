@@ -5,6 +5,7 @@ import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.server.interceptor.consent.ConsentOutcome;
 import ca.uhn.fhir.rest.server.interceptor.consent.IConsentContextServices;
 import ca.uhn.fhir.rest.server.interceptor.consent.IConsentService;
+import com.osohq.oso.Oso;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Person;
@@ -13,10 +14,12 @@ import org.keycloak.representations.AccessToken;
 
 public class PkbConsentService implements IConsentService {
 
-	private PersonResourceProvider personResourceProvider;
+	private final PersonResourceProvider personResourceProvider;
+	private final Oso oso;
 
-	public PkbConsentService(PersonResourceProvider personResourceProvider) {
+	public PkbConsentService(PersonResourceProvider personResourceProvider, Oso oso) {
 		this.personResourceProvider = personResourceProvider;
+		this.oso = oso;
 	}
 
 	/**
@@ -51,10 +54,12 @@ public class PkbConsentService implements IConsentService {
 
 	@Override
 	public ConsentOutcome canSeeResource(RequestDetails theRequestDetails, IBaseResource theResource, IConsentContextServices theContextServices) {
-		// Apply the filter.
-		Person actor = (Person)theRequestDetails.getUserData().get("person");
-		// 
-		return ConsentOutcome.PROCEED;
+		Person actor = (Person)theRequestDetails.getUserData().get("person"); 
+		if (oso.isAllowed(actor, theRequestDetails.getRestOperationType().getCode(), theResource)) {
+			return ConsentOutcome.PROCEED; 
+		} else {
+			return ConsentOutcome.REJECT;
+		}
 	}
 
 	@Override
