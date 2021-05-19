@@ -1,4 +1,4 @@
-package ca.uhn.fhir.jpa.starter.interceptors;
+package ca.uhn.fhir.jpa.starter.auth;
 
 import ca.uhn.fhir.jpa.rp.r4.PersonResourceProvider;
 import ca.uhn.fhir.rest.api.server.RequestDetails;

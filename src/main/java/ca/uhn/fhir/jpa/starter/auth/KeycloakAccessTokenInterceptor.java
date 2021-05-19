@@ -1,4 +1,4 @@
-package ca.uhn.fhir.jpa.starter.interceptors;
+package ca.uhn.fhir.jpa.starter.auth;
 
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.server.exceptions.AuthenticationException;
