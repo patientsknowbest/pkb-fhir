@@ -160,3 +160,5 @@ Temporary Items
 .apdisk
 
 .flattened-pom.xml
+.classpath
+.project

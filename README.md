@@ -9,14 +9,15 @@ Modifications from the original include:
 - running on postgres
 - running keycloak server alongside the fhir application
 - running nginx reverse proxy
-- a simple SPA which triggers login using keycloak.js
+- a simple SPA which triggers login using keycloak.js and fetches some data from the FHIR server.
 - applying keycloak's servlet filter to the FHIR application
+- applying a ConsentInterceptor implemented with Oso to authorize the user's data view.
 
 To run: 
 Add a local DNS entry for fakepkb.local pointing to 127.0.0.1 e.g. by editing /etc/hosts.
 This is a byproduct of https://issues.redhat.com/browse/KEYCLOAK-2623.
 
-Build and run the application by running `docker-compose up`
+Build and run the application by running `mvn package && docker-compose --build up`
 
 Access the frontend application at http://fakepkb.local/
 Username 'martin' password 'P@55word' is set up for testing.

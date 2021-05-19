@@ -1,3 +1,4 @@
+\c keycloak
 --
 -- PostgreSQL database dump
 --
