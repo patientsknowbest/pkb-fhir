@@ -22,6 +22,10 @@ Build and run the application by running `mvn package && docker-compose --build 
 Access the frontend application at http://fakepkb.local/
 Username 'martin' password 'P@55word' is set up for testing.
 
+Currently this shows 3 FHIR responses, the /metadata (which is a public endpoint), and two queries for Immunization
+resources, one for a Patient linked to the testing user (martin) and another query for Immunizations belonging to 
+a different user. The first should contain some results, the second should not.
+
 Access the keycloak admin UI at http://fakepkb.local/auth
 Username 'admin' password 'admin' is set up for testing.
 
