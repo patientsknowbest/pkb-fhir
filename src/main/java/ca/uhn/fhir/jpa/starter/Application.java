@@ -1,19 +1,26 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.rp.r4.PersonResourceProvider;
+import ca.uhn.fhir.jpa.rp.r4.PractitionerRoleResourceProvider;
 import ca.uhn.fhir.jpa.starter.auth.PkbConsentService;
+import ca.uhn.fhir.jpa.starter.auth.model.Actor;
+import ca.uhn.fhir.jpa.starter.auth.model.Immunization;
+import ca.uhn.fhir.jpa.starter.auth.model.Patient;
+import ca.uhn.fhir.jpa.starter.auth.model.Team;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
 import ca.uhn.fhir.jpa.subscription.submit.config.SubscriptionSubmitterConfig;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
 import com.osohq.oso.Oso;
 import org.apache.commons.io.IOUtils;
 import org.hl7.fhir.r4.model.DomainResource;
 import org.hl7.fhir.r4.model.IdType;
-import org.hl7.fhir.r4.model.Immunization;
 import org.hl7.fhir.r4.model.Person;
 import org.keycloak.adapters.servlet.KeycloakOIDCFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
@@ -52,18 +59,29 @@ public class Application extends SpringBootServletInitializer {
 	@Bean
 	public Oso setupOso(@Value("classpath:authorization.polar") Resource resource) throws IOException {
 		Oso oso = new Oso();
-		oso.registerClass(Person.class, "Person");
-		oso.registerClass(DomainResource.class, "DomainResource");
-		oso.registerClass(org.hl7.fhir.r4.model.Resource.class, "Resource");
-		oso.registerClass(IdType.class, "IdType");
-		oso.registerClass(Immunization.class, "Immunization");
+		
+		registerSimple(oso, Actor.class);
+		registerSimple(oso, Immunization.class);
+		registerSimple(oso, Patient.class);
+		registerSimple(oso, ca.uhn.fhir.jpa.starter.auth.model.Resource.class);
+		registerSimple(oso, Team.class);
 		oso.loadStr(IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8), resource.getFilename());
 		return oso;
 	}
+
+	private void registerSimple(Oso oso, Class<?> clazz) {
+		oso.registerClass(clazz, clazz.getSimpleName());
+	}
+
+	@Bean
+	@Qualifier("self")
+	public IGenericClient selfClient(FhirContext context) {
+		return context.newRestfulGenericClient("http://localhost:8080/fhir/");
+	}
 	
 	@Bean
-	public PkbConsentService pkbConsentService(PersonResourceProvider personResourceProvider, Oso oso) {
-		return new PkbConsentService(personResourceProvider, oso);
+	public PkbConsentService pkbConsentService(Oso oso, @Qualifier("self") IGenericClient selfClient) {
+		return new PkbConsentService(oso, selfClient);
 	}
 	
 	@Bean
@@ -86,7 +104,8 @@ public class Application extends SpringBootServletInitializer {
 	public FilterRegistrationBean<KeycloakOIDCFilter> keycloakFilterRegistration() {
 		FilterRegistrationBean<KeycloakOIDCFilter> registration = new FilterRegistrationBean<>();
 		registration.setFilter(new KeycloakOIDCFilter());
-		registration.addUrlPatterns("/fhir/*");
+		// TODO: MFA - Figure out how to bypass keycloak for self-access.
+//		registration.addUrlPatterns("/fhir/*");
 		registration.addUrlPatterns("/keycloak/*");
 		registration.addInitParameter("keycloak.config.skipPattern", "/fhir/metadata");
 		registration.setName("Keycloak Filter");

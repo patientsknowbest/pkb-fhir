@@ -1,10 +1,10 @@
 ### Pseudo-polar for our full authorization rules using imaginary data types ###
 # Typical 'Medical data' points (Immunization, MedicationStatement etc)
-# allow(actor: Actor, operation: String, resource: Resource) if
-#     access_frozen_check(actor, resource) and (  
-#         self_check(actor, immumization) or
-#         source_check(actor, immunization) or
-#         consent_check(actor, immunization));
+allow(actor: Actor, "search-type", immunization: Immunization) if
+    access_frozen_check(actor, immunization) and (  
+        self_check(actor, immumization) or
+        source_check(actor, immunization) or
+        consent_check(actor, immunization));
 
 # More complex Communication type
 # allow(actor: Actor, operation: String, communication: Communication) if 
@@ -16,34 +16,32 @@
 #        consent_check(actor, communication) or 
 #        communication_participant_check(actor, communication));
 
-# self_check(actor: Actor, resource: Resource) if
-#     actor.isPerson = true and  
-#         resource.patient = person;
+self_check(actor: Actor, resource) if
+    resource.patient = actor.patient;
 
-# source_check(actor: Actor, resource: Resource) if
-#     actor.teams.contains(resource.sourceTeam) or 
-#         (actor.isPerson = true and 
-#             actor = resource.sourcePerson);
+source_check(actor: Actor, resource: Resource) if
+    actor.teams.contains(resource.sourceTeam) or 
+        (actor.isPerson = true and 
+            actor = resource.sourcePerson);
 
-# consent_check(actor: Actor, resource: Resource, context: Context) if
-#     sharing_disabled_check(actor, resource) and
-#         (context.isBtgActive or
-#             resource.patient.consentsFor(actor).contains(resource.privacyFlag) or 
-#                 resource.patient.consentsFor(actor.teams).contains(resource.privacyFlag));
+consent_check(actor: Actor, resource: Resource) if
+    sharing_disabled_check(actor, resource) and
+        (actor.isBtgActive or
+            resource.patient.consentsFor(actor).contains(resource.privacyFlag) or 
+                resource.patient.consentsFor(actor.teams).contains(resource.privacyFlag));
 
-# sharing_disabled_check(actor: Actor, resource: Resource) if
-#     # // TODO: MFA - system user semantics for sharing disabled?
-#     not actor.isPerson or 
-#         actor.isTeamPro or
-#             resource.patient.sharingDisabled = false;
+sharing_disabled_check(actor: Actor, resource: Resource) if
+    # // TODO: MFA - system user semantics for sharing disabled?
+    not actor.isPerson or 
+        actor.isTeamPro or
+            resource.patient.sharingDisabled = false;
 
-# access_frozen_check(actor: Actor, resource: Resource) if 
-#     actor.isPerson = true and 
-#         actor.accessFrozen = false and 
-#             (actor.isTeamPro = true or 
-#                 resource.patient.accessFrozen = false);
-# 
-# 
+access_frozen_check(actor: Actor, resource: Resource) if 
+    actor.isPerson and 
+    not actor.isAccessFrozen and 
+    (actor.isTeamPro = true or 
+        (not resource.patient.isAccessFrozen));
+
 # private_communication_check(actor: Actor, communication: Communication) if
 # # // TODO: MFA - Semantics of private conversations, can the team access?
 # # what about system users? Current rules say no
