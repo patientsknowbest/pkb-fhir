@@ -34,7 +34,7 @@ services:
     networks:
       default:
   nginx:
-    image: "nginx:1.21.6"
+    image: "nginx:1.22@sha256:8c5a18dc716f05339547266429681d3797aaeb330837ecb8a418cded3f801876"
     restart: always
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
