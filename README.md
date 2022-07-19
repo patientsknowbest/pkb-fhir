@@ -1,3 +1,6 @@
+## archived
+This repository was a proof of concept, and isn't deployed anywhere.
+
 # PKB-FHIR
 
 Forked from https://github.com/hapifhir/hapi-fhir-jpaserver-starter
